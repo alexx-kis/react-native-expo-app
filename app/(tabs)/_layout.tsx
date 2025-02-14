@@ -1,45 +1,118 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { Image, ImageSourcePropType, Text, View } from 'react-native';
+import icons from '../../constants/icons';
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+// $======================== TabsLayout ========================$ //
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+type TabIconProps = {
+  icon: ImageSourcePropType;
+  color: string;
+  name: string;
+  focused: boolean;
+};
 
+function TabIcon({ icon, color, name, focused }: TabIconProps) {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
+    <View className='items-center justify-center gap-2'>
+      <Image
+        source={icon}
+        resizeMode='cover'
+        tintColor={color}
+        style={{ width: 24, height: 24 }}
       />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+      <Text
+        className={`${focused ? 'font-psemibold' : 'font-pregular'}`}
+        style={{
+          color: color
         }}
-      />
-    </Tabs>
+      >
+        {name}
+      </Text>
+    </View>
   );
 }
+
+function TabsLayout(): React.JSX.Element {
+  return (
+    <>
+      <Tabs
+        screenOptions={{
+          tabBarShowLabel: false,
+          tabBarActiveTintColor: '#ffa000',
+          tabBarInactiveTintColor: '#cdcde0',
+          tabBarStyle: {
+            backgroundColor: '#161622',
+            borderTopWidth: 1,
+            borderTopColor: '#232533',
+            height: 84,
+          },
+          tabBarIconStyle: {
+            height: '100%',
+          }
+        }}
+      >
+        <Tabs.Screen
+          name='home'
+          options={{
+            title: 'Home',
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.home}
+                name='Home'
+                focused={focused}
+                color={color}
+              />
+            )
+          }}
+        />
+        <Tabs.Screen
+          name='bookmark'
+          options={{
+            title: 'Bookmark',
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.bookmark}
+                name='Bookmark'
+                focused={focused}
+                color={color}
+              />
+            )
+          }}
+        />
+        <Tabs.Screen
+          name='create'
+          options={{
+            title: 'Create',
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.plus}
+                name='Create'
+                focused={focused}
+                color={color}
+              />
+            )
+          }}
+        />
+        <Tabs.Screen
+          name='profile'
+          options={{
+            title: 'Profile',
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.profile}
+                name='Profile'
+                focused={focused}
+                color={color}
+              />
+            )
+          }}
+        />
+      </Tabs>
+    </>
+  );
+}
+export default TabsLayout;
