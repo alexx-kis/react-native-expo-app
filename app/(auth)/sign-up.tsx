@@ -1,8 +1,9 @@
 import CustomButton from '@/components/custom-button';
 import FormField from '@/components/form-field';
-import { Link } from 'expo-router';
-import { ChangeEvent, useState } from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { createUser } from '@/lib/appwrite';
+import { Link, router } from 'expo-router';
+import { useState } from 'react';
+import { Alert, Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '../../constants/images';
 
@@ -18,7 +19,26 @@ function SignUp(): React.JSX.Element {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = () => { };
+  const onSubmit = async () => {
+
+    if (!form.username || !form.email || !form.password) {
+      Alert.alert('Error', 'Please, fill in all the fields');
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const result = await createUser(form.email, form.password, form.username)
+
+      // set it to global state...
+
+      router.replace('/home')
+    } catch (error) {
+      Alert.alert('Error', (error as Error).message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -29,7 +49,10 @@ function SignUp(): React.JSX.Element {
           <Image
             source={images.logo}
             resizeMode='contain'
-            className='w-[115px] h-[35px]'
+            style={{
+              width: 115,
+              height: 35
+            }}
           />
           <Text className='text-white text-2xl text-semibold mt-10 font-psemibold'>
             Sign up to Aora
@@ -64,7 +87,7 @@ function SignUp(): React.JSX.Element {
           />
 
           <CustomButton
-            title='Sign In'
+            title='Sign Up'
             handlePress={onSubmit}
             containerStyles='mt-7'
             isLoading={isSubmitting}

@@ -33,7 +33,7 @@ function FormField(formFieldProps: FormFieldProps): React.JSX.Element {
         className={`w-full h-16 px-4 bg-black-100 border-2 rounded-2xl  items-center ${isFocused ? 'border-secondary' : 'border-black-200'} flex-row`}
       >
         <TextInput
-          className='w-full flex-1 text-white font-psemibold text-base'
+          className='w-full flex-1 text-white font-psemibold text-base focus:border-transparent focus:outline-none'
           value={value}
           placeholder={placeholder}
           placeholderTextColor='#7b7b8b'
@@ -49,8 +49,11 @@ function FormField(formFieldProps: FormFieldProps): React.JSX.Element {
           >
             <Image
               source={!showPassword ? icons.eye : icons.eyeHide}
-              className='w-6 h-6'
               resizeMode='contain'
+              style={{
+                width: 24,
+                height: 24
+              }}
             />
           </TouchableOpacity>
         )}

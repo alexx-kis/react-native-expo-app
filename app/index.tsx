@@ -1,11 +1,19 @@
 import CustomButton from '@/components/custom-button';
-import { router } from 'expo-router';
+import { useGlobalContext } from '@/context/global-provider';
+import { Redirect, router } from 'expo-router';
 import { Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, View } from 'react-native';
 import images from '../constants/images';
 
 // #======================== index ========================# //
 
-export default function HomeScreen() {
+export default function Index() {
+
+  const { isLoading, isLoggedIn } = useGlobalContext();
+
+if (!isLoading && isLoggedIn) {
+  return <Redirect href='./home'/>
+}
+
   return (
     <SafeAreaView className='bg-primary h-full'>
       <ScrollView contentContainerStyle={{ height: '100%' }}>
@@ -39,8 +47,8 @@ export default function HomeScreen() {
                   resizeMode='contain'
                   className='absolute w-[136px] h-[15px] -right-8'
                   style={{
-                    width: 146, 
-                    height: 15, 
+                    width: 146,
+                    height: 15,
                     position: 'absolute',
                     bottom: Platform.OS === 'ios' ? -22 : -8
                   }}

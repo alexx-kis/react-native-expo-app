@@ -2,6 +2,7 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import '../global.css';
+import { GlobalProvider } from '@/context/global-provider';
 
 // $======================== RootLayout ========================$ //
 
@@ -30,12 +31,14 @@ function RootLayout(): React.JSX.Element | null {
   if (!fontsLoaded && !error) return null;
 
   return (
+    <GlobalProvider>
     <Stack>
       <Stack.Screen name='index' options={{ headerShown: false }} />
       <Stack.Screen name='(auth)' options={{ headerShown: false }} />
       <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
       {/* <Stack.Screen name='/search/[query]' options={{ headerShown: false }} /> */}
     </Stack>
+    </GlobalProvider>
   );
 }
 export default RootLayout;
