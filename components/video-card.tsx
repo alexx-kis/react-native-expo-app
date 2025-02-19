@@ -1,31 +1,17 @@
 import icons from '@/constants/icons';
+import { VideoCardType } from '@/types';
 import { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { Models } from 'react-native-appwrite';
 
 // ^======================== VideoCard ========================^ //
 
-export type VideoCardProps = Models.Document & {
-  video: {
-    title: string;
-    thumbnail: string;
-    video: string;
-    users: {
-      username: string;
-      avatar: string;
-    };
-  };
-  title: string;
-  thumbnail: string;
-  users: {
-    username: string;
-    avatar: string;
-  };
+export type VideoCardProps = {
+  item: VideoCardType;
 };
 
 function VideoCard(videoCardProps: VideoCardProps): React.JSX.Element {
 
-  const { video: { title, thumbnail, video, users: { username, avatar } } } = videoCardProps;
+  const { item: { title, thumbnail, video, users } } = videoCardProps;
 
   const [play, setPlay] = useState(false);
 
@@ -43,7 +29,7 @@ function VideoCard(videoCardProps: VideoCardProps): React.JSX.Element {
               borderRadius: 8,
             }}>
             <Image
-              source={{ uri: avatar }}
+              source={{ uri: users?.avatar }}
               resizeMode='cover'
               style={{
                 width: 40,
@@ -62,10 +48,10 @@ function VideoCard(videoCardProps: VideoCardProps): React.JSX.Element {
             }}
           >
             <Text className='text-white font-psemibold text-sm' numberOfLines={1}>
-              {title}
+              {title!}
             </Text>
             <Text className='text-xs text-gray-100 font-pregular' numberOfLines={1}>
-              {username}
+              {users?.username}
             </Text>
           </View>
         </View>
@@ -86,9 +72,23 @@ function VideoCard(videoCardProps: VideoCardProps): React.JSX.Element {
       {
         play
           ? (
-            <Text className='text-white'>
-              Playing
-            </Text>
+            <iframe
+              src={video}
+              width="208"
+              height="288"
+              frameBorder="0"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              style={{
+                flexShrink: 0,
+                width: '100%',
+                height: 240,
+                borderRadius: 35,
+                marginTop: 12,
+                backgroundColor: '#ffffff1a',
+                marginBlock: 20,
+              }}
+            />
           )
           : (
             <TouchableOpacity

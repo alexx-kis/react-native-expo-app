@@ -1,72 +1,28 @@
-import { useState } from 'react';
-import { FlatList, ImageBackground, TouchableOpacity } from 'react-native';
-import * as Animatable from 'react-native-animatable';
+import { VideoCardType } from '@/types';
+import { useCallback, useState } from 'react';
+import { FlatList, ViewToken } from 'react-native';
+import TrendingItem from './trending-item';
 
-// ^======================== Trending ========================^ //
+// ^======================== TrendingList ========================^ //
 
-// type TrendingProps = {
-//   prop: type;
-// };
-
-const zoomIn = {
-  0: {
-    scale: 0.9,
-  },
-  1: {
-    scale: 1,
-  }
-};
-const zoomOut = {
-  0: {
-    scale: 1,
-  },
-  1: {
-    scale: 0.9,
-  }
+type TrendingListProps = {
+  posts: VideoCardType[];
 };
 
-function TrendingItem(trendingItemProps: TrendingItemProps): React.JSX.Element {
+function TrendingList(trendingListProps: TrendingListProps): React.JSX.Element {
 
-  const { activeItem, item } = trendingItemProps;
-
-  const [play, setPlay] = useState(false);
-
-  return (
-    <Animatable.View
-      className='mr-5'
-      animation={activeItem === item.$id ? zoomIn : zoomOut}
-      duration={5000}
-    >
-      {
-        play
-          ? (
-            <Text className='text-white'>
-              Playing
-            </Text>
-          )
-          : (
-            <TouchableOpacity
-              className='relative justify-center items-center'
-              activeOpacity={0.7}
-              onPress={() => setPlay(true)}
-            >
-              <ImageBackground />
-            </TouchableOpacity>
-          )
-      }
-    </Animatable.View>
-  );
-}
-
-type TrendingItemProps = {
-  posts: { $id: string; }[];
-};
-
-function Trending(trendingItemProps: TrendingItemProps): React.JSX.Element {
-
-  const { posts } = trendingItemProps;
+  const { posts } = trendingListProps;
 
   const [activeItem, setActiveItem] = useState(posts[0]);
+
+  const viewableItemsChanged = useCallback(({ viewableItems }: { viewableItems: ViewToken[]; }) => {
+    if (viewableItems.length > 0) {
+      const visibleItem = posts.find(item => item.$id === viewableItems[0].key);
+      if (visibleItem) {
+        setActiveItem(visibleItem);
+      }
+    }
+  }, []);
 
   return (
     <FlatList
@@ -74,14 +30,18 @@ function Trending(trendingItemProps: TrendingItemProps): React.JSX.Element {
       keyExtractor={(item) => item.$id.toString()}
       renderItem={({ item }) => (
         <TrendingItem
-          currentlyActiveItem={activeItem}
-          // item={ }
+          activeItem={activeItem}
+          item={item}
         >
-
         </TrendingItem>
       )}
+      onViewableItemsChanged={viewableItemsChanged}
+      viewabilityConfig={{
+        itemVisiblePercentThreshold: 75
+      }}
+      contentOffset={{ x: 170, y: 0 }}
       horizontal
     />
   );
 }
-export default Trending;
+export default TrendingList;

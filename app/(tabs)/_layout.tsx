@@ -44,10 +44,11 @@ function TabsLayout(): React.JSX.Element {
             backgroundColor: '#161622',
             borderTopWidth: 1,
             borderTopColor: '#232533',
-            height: 84,
+            height: 100,
           },
           tabBarIconStyle: {
             height: '100%',
+            width: '100%',
           }
         }}
       >

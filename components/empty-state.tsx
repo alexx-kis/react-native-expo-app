@@ -24,11 +24,11 @@ function EmptyState(emptyStateProps: EmptyStateProps): React.JSX.Element {
         }}
         resizeMode='contain'
       />
-      <Text className='font-pmedium text-sm text-gray-100' >
-        {title}
-      </Text>
       <Text className='text-xl text-center font-psemibold text-white mt-2'>
         {title}
+      </Text>
+      <Text className='font-pmedium text-sm text-gray-100' >
+        {subtitle}
       </Text>
       <CustomButton
         title='Create a video'

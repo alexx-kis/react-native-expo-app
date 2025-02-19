@@ -1,13 +1,13 @@
 import EmptyState from '@/components/empty-state';
 import SearchField from '@/components/search-input';
 import Trending from '@/components/trending';
-import VideoCard, { VideoCardProps } from '@/components/video-card';
+import VideoCard from '@/components/video-card';
 import images from '@/constants/images';
 import { getAllPosts, getLatestPosts } from '@/lib/appwrite';
 import { useAppwrite } from '@/lib/use-appwrite';
+import { VideoCardType } from '@/types';
 import { useState } from 'react';
 import { FlatList, Image, RefreshControl, Text, View } from 'react-native';
-import { Models } from 'react-native-appwrite';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // #======================== Home ========================# //
@@ -25,13 +25,15 @@ function Home(): React.JSX.Element {
     setIsRefreshing(false);
   };
 
+  console.log(posts)
+
   return (
     <SafeAreaView className='bg-primary h-full'>
       <FlatList
-        data={posts}
-        keyExtractor={(item) => item.$id.toString()}
+        data={posts as VideoCardType[]}
+        keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <VideoCard video={item} />
+          <VideoCard item={item} />
         )}
         ListHeaderComponent={() => (
           <View className='my-6 px-4 sp-y-6'>
@@ -61,7 +63,7 @@ function Home(): React.JSX.Element {
               <Text className='text-gray-100 text-lg font-pregular mb-3'>
                 Latest Videos
               </Text>
-              <Trending posts={latestPosts ?? []} />
+              <Trending posts={latestPosts as VideoCardType[]} />
             </View>
           </View>
         )}

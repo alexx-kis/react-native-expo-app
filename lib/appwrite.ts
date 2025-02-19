@@ -117,3 +117,44 @@ export const getLatestPosts = async () => {
     throw new Error((error as Error).message);
   }
 };
+
+export const searchPosts = async (query: string) => {
+  try {
+    const posts = await databases.listDocuments(
+      databaseId,
+      videosCollectionId,
+      [Query.search('title', query)]
+    );
+    return posts.documents;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
+export const getUserPosts = async (userId: string) => {
+  try {
+    const posts = await databases.listDocuments(
+      databaseId,
+      videosCollectionId,
+      [Query.equal("users.$id", userId)]
+    );
+
+    return posts.documents;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw new Error((error as Error).message);
+  }
+};
+
+
+export const debugCollection = async () => {
+  try {
+    const response = await databases.listDocuments(databaseId, videosCollectionId);
+    console.log("First document in collection:", response.documents[0]);
+  } catch (error) {
+    console.error("Error fetching collection schema:", error);
+  }
+};
+
+
+// debugCollection()
